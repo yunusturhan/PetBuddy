@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "81846594526",
+    "project_id": "petbuddyim",
+    "storage_bucket": "petbuddyim.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:81846594526:android:9184a0245028ce9f170b4f",
+        "android_client_info": {
+          "package_name": "com.example.petbuddy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "81846594526-tv3s377j98raqh8r44n4je38kk92qn39.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.petbuddy",
+            "certificate_hash": "6da3b51e8cafb37b7c42ff82e46efa6ac58f6cca"
+          }
+        },
+        {
+          "client_id": "81846594526-aq09hp51m7e8l7gsatapsulegm9qn761.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCu-izvWnL8sNvC_uiyx0-tugkPwmB90Nk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "81846594526-aq09hp51m7e8l7gsatapsulegm9qn761.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

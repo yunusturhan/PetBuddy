@@ -14,7 +14,7 @@ class PetEkleService {
   String mediaUrl = '';
   var documentRef;
   //status eklemek için
-  Future<PetBilgi> petEkle(String ad,String cinsi,String turu,String cinsiyeti,String kullanici_id,XFile pickedFile) async {
+  Future<PetBilgi> petEkle(String ad,String cinsi,String turu,String cinsiyeti,String user_id,XFile pickedFile) async {
     var ref = _firestore.collection("Petler");
     if(pickedFile==null){
       mediaUrl="";
@@ -22,11 +22,11 @@ class PetEkleService {
       mediaUrl=await _storageService.resimYukleme(File(pickedFile.path));
     }
 
-    documentRef= await ref.add({'ad': ad, 'resim': mediaUrl,'turu':turu,'cinsi':cinsi,'cinsiyeti':cinsiyeti,'kullanici_id':kullanici_id});
+    documentRef= await ref.add({'ad': ad, 'resim': mediaUrl,'turu':turu,'cinsi':cinsi,'cinsiyeti':cinsiyeti,'user_id':user_id});
 
 
 
-    return PetBilgi(id: documentRef.id, ad: ad,turu:turu,cinsi:cinsi,cinsiyeti:cinsiyeti,kullanici_id:kullanici_id,resim:mediaUrl);
+    return PetBilgi(id: documentRef.id, ad: ad,turu:turu,cinsi:cinsi,cinsiyeti:cinsiyeti,user_id:user_id,resim:mediaUrl);
   }
 
   //status göstermek için

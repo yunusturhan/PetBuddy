@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:petbuddy/pages/kullanici_ilanlari.dart';
+import 'package:petbuddy/pages/kullanici_profil_sayfasi.dart';
 import 'package:petbuddy/pages/pet_ekle.dart';
 import 'package:petbuddy/pages/kullanici_petleri.dart';
 import 'package:petbuddy/service/petekle_service.dart';
@@ -24,6 +25,7 @@ class _IlanlarState extends State<Ilanlar> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final StorageService storage = StorageService();
   PetEkleService _petEkleService = PetEkleService();
+
 
   @override
   Widget build(BuildContext context) {
@@ -50,9 +52,24 @@ class _IlanlarState extends State<Ilanlar> {
             DrawerHeader(
               child: Column(
                 children: [
+
                   Text(context.watch<AuthService>().user!.email!.toString()),
 
                 ],
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ChangeNotifierProvider(
+                  create: (_)=>AuthService(),
+                  child: KullaniciProfili(),
+                )));
+              },
+              child: Text(
+                "Profilim",
+                style: TextStyle(
+                  color: Colors.white,
+                ),
               ),
             ),
             ElevatedButton(
@@ -161,7 +178,7 @@ class _IlanlarState extends State<Ilanlar> {
                                                 Radius.circular(10)),
                                             color: Colors.white),
                                         margin: EdgeInsets.all(5),
-                                        child: Image.network('${listedeDokumanSnapshot[index].get("resim")}',width: 150,height: 150,),
+                                        child: Image.network('${listedeDokumanSnapshot[index].get("resim")}',fit: BoxFit.fill,),
                                       ),
                                       Column(
                                         mainAxisAlignment:

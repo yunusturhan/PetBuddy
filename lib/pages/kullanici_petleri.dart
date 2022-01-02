@@ -106,7 +106,7 @@ class _Petlerim extends State<Petlerim> {
                                               Radius.circular(10)),
                                           color: Colors.white),
                                       margin: EdgeInsets.all(5),
-                                      child: Image.network('${listedeDokumanSnapshot[index].get("resim")}',width: 150,height: 150,),
+                                      child: Image.network('${listedeDokumanSnapshot[index].get("resim")}',fit: BoxFit.fill,),
                                     ),
                                     Column(mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,

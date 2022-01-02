@@ -33,7 +33,7 @@ class _IlanEkle extends State<IlanEkle> {
     CollectionReference ilanlarRef = _firestore.collection("ilanlar");
     CollectionReference PetlerRef = _firestore.collection("Petler");
     String? secilenPet="adf";
-    List<String>? petlerList=["1","2","3"];
+    List<String>? petlerList=["1","2","3","4","5","6",];
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -68,7 +68,6 @@ class _IlanEkle extends State<IlanEkle> {
       body: Center(
         child:Column(
           children: [
-
             Container(
               width: 300,
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(12),border: Border.all(color: Colors.grey.shade400)),
@@ -78,8 +77,27 @@ class _IlanEkle extends State<IlanEkle> {
                 icon: Icon(Icons.keyboard_arrow_down),
                 items:petlerList.map((String items) {
                   return DropdownMenuItem(
-                      value: items,
-                      child: Text(items)
+                      value: secilenPet,
+                      child: StreamBuilder<QuerySnapshot>(
+                        stream: PetlerRef.where('user_id',isEqualTo: '${context.watch<AuthService>().user!.uid}').snapshots(),
+                        builder:(BuildContext context, AsyncSnapshot asyncSnapshot){
+                          try {
+                            List<DocumentSnapshot> listedeDokumanSnapshot =asyncSnapshot.data.docs;
+                            return !asyncSnapshot.hasData ? Center(child: CircularProgressIndicator())
+                                : Flexible(
+                              child: ListView.builder(
+                                  itemCount: listedeDokumanSnapshot.length,
+                                  itemBuilder: (context, index) {
+                                    petlerList.add(listedeDokumanSnapshot[index].get('ad'));
+                                    return Text(listedeDokumanSnapshot[index].get('ad'));
+                                  }),
+                            );
+                          }catch(e){
+                            print("hata $e");
+                            return Center(child: LinearProgressIndicator(),);
+                          }
+                        } ,
+                      ),
                   );
                 }
                 ).toList(),
@@ -94,13 +112,10 @@ class _IlanEkle extends State<IlanEkle> {
 
 
             StreamBuilder<QuerySnapshot>(
-              stream: PetlerRef.where('kullanici_id',isEqualTo: '${context.watch<AuthService>().user!.uid}').snapshots(),
+              stream: PetlerRef.where('user_id',isEqualTo: '${context.watch<AuthService>().user!.uid}').snapshots(),
               builder:(BuildContext context, AsyncSnapshot asyncSnapshot){
                 try {
                   List<DocumentSnapshot> listedeDokumanSnapshot =asyncSnapshot.data.docs;
-                  petlerList.add("value");
-
-
                   return !asyncSnapshot.hasData ? Center(child: CircularProgressIndicator())
                       : Flexible(
                     child: ListView.builder(
@@ -124,24 +139,6 @@ class _IlanEkle extends State<IlanEkle> {
                                   "${listedeDokumanSnapshot[index].get('ad')}",
                                   style: TextStyle(fontSize: 18),
                                 ),
-
-                                Row(
-                                  children: [
-                                    Container(
-                                      height: 150,
-                                      width: 150,
-                                      decoration: BoxDecoration(
-                                          border: Border.all(width: 1),
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(10)),
-                                          color: Colors.white),
-                                      margin: EdgeInsets.all(5),
-                                      child: Image.network('${listedeDokumanSnapshot[index].get("resim")}',width: 150,height: 150,),
-                                    ),
-
-                                  ],
-                                ),
-
                               ],
                             ),
                           );

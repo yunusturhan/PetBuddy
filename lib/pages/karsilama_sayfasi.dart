@@ -16,24 +16,27 @@ class _KarsilamaSayfasiState extends State<KarsilamaSayfasi> {
     return Scaffold(
       //appBar: AppBar(title: Column(children: [Text("Artık Sende PetBuddylisin")],mainAxisAlignment: MainAxisAlignment.center,),),
       body: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image.asset("assets/images/petpati.png",width: 200,height: 200,),
-            Row(mainAxisAlignment: MainAxisAlignment.center,children:[Text("Başlamadan önce bunları okumalısın ",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),Icon(Icons.sentiment_satisfied_outlined,size: 26,)], ),
-            SizedBox(height: 50,),
-            Row(mainAxisAlignment: MainAxisAlignment.center,children:[Text("Bu uygulama ;")], ),
-            Row(mainAxisAlignment: MainAxisAlignment.center,children:[Text("evcil hayvanları olan insanları bir araya getirmeyi amaçlayan")], ),
-            Row(mainAxisAlignment: MainAxisAlignment.center,children:[Text("özünde bilgisayar mühendisliği bitirme projesidir.")], ),
-            Row(mainAxisAlignment: MainAxisAlignment.center,children:[Text("Hiçbir ticari amaç beslenmemektedir.")], ),
-            SizedBox(height: 20,),
-            Row(mainAxisAlignment: MainAxisAlignment.center,children:[Text("Hayvan satışı kesinliklik yasaktır ",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),Icon(Icons.priority_high_outlined,color: Colors.red,)], ),
-            Row(mainAxisAlignment: MainAxisAlignment.center,children:[Text("Hayvan dövüşü yapmak için ilan oluşturmayınız ",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),Icon(Icons.priority_high_outlined,color: Colors.red,)], ),
-            Row(mainAxisAlignment: MainAxisAlignment.center,children:[Text("Şifrenizi kimseyle paylaşmayınız ",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),Icon(Icons.priority_high_outlined,color: Colors.red,)], ),
-            Row(mainAxisAlignment: MainAxisAlignment.center,children:[Text("DM'den insanları rahatsız etmek ban sebebidir ",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),Icon(Icons.priority_high_outlined,color: Colors.red,)], ),
+        child: Container(padding: EdgeInsets.all(5),
+          margin: EdgeInsets.all(5),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image.asset("assets/images/petpati.png",width: 200,height: 200,),
+              Row(mainAxisAlignment: MainAxisAlignment.center,children:[Text("Başlamadan önce bunları okumalısın ",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),Icon(Icons.sentiment_satisfied_outlined,size: 26,)], ),
+              SizedBox(height: 50,),
+              Row(mainAxisAlignment: MainAxisAlignment.center,children:[Text("Bu uygulama ;")], ),
+              Row(mainAxisAlignment: MainAxisAlignment.center,children:[Text("Evcil hayvanları olan insanları bir araya getirmeyi amaçlayan")], ),
+              Row(mainAxisAlignment: MainAxisAlignment.center,children:[Text("özünde bilgisayar mühendisliği bitirme projesidir.")], ),
+              Row(mainAxisAlignment: MainAxisAlignment.center,children:[Text("Hiçbir ticari amaç beslenmemektedir.")], ),
+              SizedBox(height: 20,),
+              Row(mainAxisAlignment: MainAxisAlignment.center,children:[Text("Hayvan satışı kesinliklik yasaktır ",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),Icon(Icons.priority_high_outlined,color: Colors.red,)], ),
+              Row(mainAxisAlignment: MainAxisAlignment.center,children:[Text("Hayvan dövüşü yapmak için ilan oluşturmayınız ",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),Icon(Icons.priority_high_outlined,color: Colors.red,)], ),
+              Row(mainAxisAlignment: MainAxisAlignment.center,children:[Text("Şifrenizi kimseyle paylaşmayınız ",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),Icon(Icons.priority_high_outlined,color: Colors.red,)], ),
+              Row(mainAxisAlignment: MainAxisAlignment.center,children:[Text("DM'den insanları rahatsız etmek ban sebebidir ",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),Icon(Icons.priority_high_outlined,color: Colors.red,)], ),
 
 
-          ],
+            ],
+          ),
         ),
       ),floatingActionButton: FloatingActionButton.extended(
       label: Text("Kabul ediyorum"),onPressed: (){

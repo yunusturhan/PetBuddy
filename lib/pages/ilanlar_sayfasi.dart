@@ -33,6 +33,8 @@ class _IlanlarState extends State<Ilanlar> {
     CollectionReference KullaniciRef = _firestore.collection("Kullanici");
 
     String kullanici_idsi=context.watch<AuthService>().user!.uid;
+    String? secilenPet="pet";
+    List<String>? petlerList=["pet","yunus"];
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -42,7 +44,8 @@ class _IlanlarState extends State<Ilanlar> {
               width: 50,
               height: 50,
             ),
-            Text("İLANLAR")
+
+            Text("İLANLAR"),
           ],
         ),
       ),
@@ -133,6 +136,21 @@ class _IlanlarState extends State<Ilanlar> {
       body: Center(
         child: Column(
           children: [
+            DropdownButton(
+              isExpanded: true,
+              //hint: Text("Petinizi Seçin"),
+              value: secilenPet,
+              icon: Icon(Icons.keyboard_arrow_down),
+              items: petlerList.map((String oankipet) =>DropdownMenuItem(child: Text(oankipet),value: oankipet,) ).toList(),
+              onChanged: (String? yeniDeger){
+                setState(() {
+                  secilenPet=yeniDeger!;
+                  print(secilenPet);
+                  print(petlerList);
+                });
+
+              },
+            ),
             SizedBox(height: 10,),
             StreamBuilder<QuerySnapshot>(
                 stream: ilanlarRef.snapshots(),
@@ -178,7 +196,8 @@ class _IlanlarState extends State<Ilanlar> {
                                                 Radius.circular(10)),
                                             color: Colors.white),
                                         margin: EdgeInsets.all(5),
-                                        child: Image.network('${listedeDokumanSnapshot[index].get("resim")}',fit: BoxFit.fill,),
+                                        child: ClipRRect(borderRadius: BorderRadius.all(Radius.circular(8),
+                                        ),child: Image.network('${listedeDokumanSnapshot[index].get("resim")}',fit: BoxFit.fill)),
                                       ),
                                       Column(
                                         mainAxisAlignment:

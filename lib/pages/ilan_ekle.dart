@@ -26,14 +26,19 @@ class _IlanEkle extends State<IlanEkle> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
 
+
   @override
   Widget build(BuildContext context) {
 
-
+    String? secilenCinsiyet='Dişi';
+    List<String>? petlerList=['pet','erkek'];
+   FirebaseFirestore.instance.collection('Petler').where('user_id',isEqualTo: '${context.watch<AuthService>().user!.uid}').snapshots().listen((data) {
+        data.docs.forEach((doc) {petlerList.add(doc['ad']);
+      });
+    });
     CollectionReference ilanlarRef = _firestore.collection("ilanlar");
     CollectionReference PetlerRef = _firestore.collection("Petler");
-    String? secilenPet="adf";
-    List<String>? petlerList=["1","2","3","4","5","6",];
+    String? secilenPet="pet";
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -77,8 +82,45 @@ class _IlanEkle extends State<IlanEkle> {
                 icon: Icon(Icons.keyboard_arrow_down),
                 items:petlerList.map((String items) {
                   return DropdownMenuItem(
-                      value: secilenPet,
-                      child: StreamBuilder<QuerySnapshot>(
+                      value: items,
+                      child: Text(items)
+                  );
+                }
+                ).toList(),
+                onChanged: (String? newValue){
+                  setState(() {
+                    secilenCinsiyet = newValue;
+                  });
+                },
+              ),
+            ),
+
+             DropdownButton(
+                isExpanded: true,
+                //hint: Text("Petinizi Seçin"),
+                value: secilenPet,
+                icon: Icon(Icons.keyboard_arrow_down),
+                items: petlerList.map((String oankipet) =>DropdownMenuItem(child: Text(oankipet),value: oankipet,) ).toList(),
+                onChanged: (String? yeniDeger){
+                  setState(() {
+                    secilenPet=yeniDeger!;
+                    print(secilenPet);
+                    print(petlerList);
+                  });
+
+                },
+              ),
+          ],
+        ),
+
+      ),
+    );
+  }
+}
+
+
+/*
+StreamBuilder<QuerySnapshot>(
                         stream: PetlerRef.where('user_id',isEqualTo: '${context.watch<AuthService>().user!.uid}').snapshots(),
                         builder:(BuildContext context, AsyncSnapshot asyncSnapshot){
                           try {
@@ -98,62 +140,18 @@ class _IlanEkle extends State<IlanEkle> {
                           }
                         } ,
                       ),
-                  );
-                }
-                ).toList(),
-                onChanged: (String? newValue){
-                  setState(() {
-                    secilenPet = newValue!;
-                  });
-                },
-              ),
-            ),
 
 
 
-            StreamBuilder<QuerySnapshot>(
-              stream: PetlerRef.where('user_id',isEqualTo: '${context.watch<AuthService>().user!.uid}').snapshots(),
-              builder:(BuildContext context, AsyncSnapshot asyncSnapshot){
-                try {
-                  List<DocumentSnapshot> listedeDokumanSnapshot =asyncSnapshot.data.docs;
-                  return !asyncSnapshot.hasData ? Center(child: CircularProgressIndicator())
-                      : Flexible(
-                    child: ListView.builder(
-                        itemCount: listedeDokumanSnapshot.length,
-                        itemBuilder: (context, index) {
-                          petlerList.add(listedeDokumanSnapshot[index].get('ad'));
-                          return Container(
-                            height: 200,
-                            width: 400,
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                    width: 1, color: Colors.grey.shade400),
-                                borderRadius:
-                                BorderRadius.all(Radius.circular(20)),
-                                color: Color.fromRGBO(205, 195, 146, 100)),
-                            margin: EdgeInsets.all(5),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(
-                                  "${listedeDokumanSnapshot[index].get('ad')}",
-                                  style: TextStyle(fontSize: 18),
-                                ),
-                              ],
-                            ),
-                          );
-                        }),
-                  );
-                }catch(e){
-                  print("hata $e");
-                  return Center(child: LinearProgressIndicator(),);
-                }
-              } ,
-            ),
-          ],
-        ),
 
-      ),
-    );
-  }
-}
+
+
+
+
+
+
+ petlerList.map((String oankipet) =>DropdownMenuItem(child: Text(oankipet),value: oankipet,) ).toList()
+
+
+
+ */

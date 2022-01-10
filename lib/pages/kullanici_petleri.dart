@@ -69,7 +69,7 @@ class _Petlerim extends State<Petlerim> {
         child:Column(
           children: [
             StreamBuilder<QuerySnapshot>(
-              stream: PetlerRef.where('kullanici_id',isEqualTo: '${context.watch<AuthService>().user!.uid}').snapshots(),
+              stream: PetlerRef.where('user_id',isEqualTo: '${context.watch<AuthService>().user!.uid}').snapshots(),
               builder:(BuildContext context, AsyncSnapshot asyncSnapshot){
                 try {
                   List<DocumentSnapshot> listedeDokumanSnapshot =asyncSnapshot.data.docs;

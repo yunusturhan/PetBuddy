@@ -32,7 +32,7 @@ class _PetEkle extends State<PetEkle> {
   final ImagePicker _pickerImage = ImagePicker();
   dynamic _pickImage;
   var profileImage;
-  String? petAdi,turu,cinsi,cinsiyeti='Dişi',secilenCinsiyet='Dişi';
+  String? petAdi,turu,cinsi,secilenCinsiyet='Dişi';
   final cinsiyetlist=['Dişi','Erkek'];
 
 

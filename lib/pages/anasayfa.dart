@@ -2,7 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:petbuddy/pages/giris_yap_sayfasi.dart';
-import 'package:petbuddy/pages/ilan_ekle.dart';
+import 'package:petbuddy/pages/ilanekleme.dart';
 import 'package:petbuddy/pages/ilanlar_sayfasi.dart';
 import 'package:petbuddy/pages/kullanici_ilanlari.dart';
 import 'package:petbuddy/pages/kullanici_petleri.dart';

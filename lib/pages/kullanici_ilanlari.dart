@@ -104,6 +104,7 @@ class _KullaniciIlanlarState extends State<KullaniciIlanlar> {
           children: [
             SizedBox(height: 10,),
             StreamBuilder<QuerySnapshot>(
+
                 stream: ilanlarRef.where('user_id',isEqualTo:'${context.watch<AuthService>().user!.uid}').snapshots(),
                 builder: (BuildContext context, AsyncSnapshot asyncSnapshot) {
                   try {

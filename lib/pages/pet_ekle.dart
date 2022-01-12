@@ -192,7 +192,7 @@ class _PetEkle extends State<PetEkle> {
                 turuController.text="";
                 cinsiController.text="";
 
-              }, child: Text("pet ekle"))
+              }, child: Text("PET EKLE",style: TextStyle(color: Colors.white),)),
             ],
           ),
         ),

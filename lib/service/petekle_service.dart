@@ -30,13 +30,13 @@ class PetEkleService {
   }
 
   //status göstermek için
-  Stream<QuerySnapshot> getStatus() {
+  Stream<QuerySnapshot> petGetir() {
     var ref = _firestore.collection("Petler").snapshots();
     return ref;
   }
 
   //status silmek için
-  Future<void> removeStatus(String docId) {
+  Future<void> petSil(String docId) {
     var ref = _firestore.collection("Petler").doc(docId).delete();
 
     return ref;

@@ -43,7 +43,7 @@ class _KullaniciProfiliState extends State<KullaniciProfili> {
               width: 50,
               height: 50,
             ),
-            //Text("${KullaniciRef.doc(context.watch<AuthService>().user!.uid).get('user_adi')}")
+            Text("PROFİLİM")
           ],
         ),
       ),
@@ -118,7 +118,10 @@ class _KullaniciProfiliState extends State<KullaniciProfili> {
       ),
       body: Center(
         child:Column(
+          children: [
+            ElevatedButton.icon(icon:Icon(Icons.campaign_outlined,color: Colors.white,), label:Text("İlanlarım",style: TextStyle(color: Colors.white),),onPressed: (){})
 
+          ],
         )),
     );
   }

@@ -136,22 +136,8 @@ class _IlanlarState extends State<Ilanlar> {
       body: Center(
         child: Column(
           children: [
-            DropdownButton(
-              isExpanded: true,
-              //hint: Text("Petinizi Seçin"),
-              value: secilenPet,
-              icon: Icon(Icons.keyboard_arrow_down),
-              items: petlerList.map((String oankipet) =>DropdownMenuItem(child: Text(oankipet),value: oankipet,) ).toList(),
-              onChanged: (String? yeniDeger){
-                setState(() {
-                  secilenPet=yeniDeger!;
-                  print(secilenPet);
-                  print(petlerList);
-                });
 
-              },
-            ),
-            SizedBox(height: 10,),
+            SizedBox(height: 5,),
             StreamBuilder<QuerySnapshot>(
                 stream: ilanlarRef.snapshots(),
                 builder: (BuildContext context, AsyncSnapshot asyncSnapshot) {
@@ -196,8 +182,9 @@ class _IlanlarState extends State<Ilanlar> {
                                                 Radius.circular(10)),
                                             color: Colors.white),
                                         margin: EdgeInsets.all(5),
-                                        child: ClipRRect(borderRadius: BorderRadius.all(Radius.circular(8),
-                                        ),child: Image.network('${listedeDokumanSnapshot[index].get("resim")}',fit: BoxFit.fill)),
+                                        child: ClipRRect(borderRadius: BorderRadius.all(Radius.circular(8),),
+                                            child: Image.network('${listedeDokumanSnapshot[index].get("resim")}',fit: BoxFit.fill),
+                                        ),
                                       ),
                                       Column(
                                         mainAxisAlignment:
@@ -208,9 +195,8 @@ class _IlanlarState extends State<Ilanlar> {
                                           Text(
                                               "${listedeDokumanSnapshot[index].get("turu")}"),
                                           Text(
-                                              "${(listedeDokumanSnapshot[index].get("tarih") as Timestamp).toDate()}"),
-                                          Text(
-                                              "${listedeDokumanSnapshot[index].get("yer")}"),
+                                              "${(listedeDokumanSnapshot[index].get("tarih") as Timestamp).toDate().day}/${(listedeDokumanSnapshot[index].get("tarih") as Timestamp).toDate().month}/${(listedeDokumanSnapshot[index].get("tarih") as Timestamp).toDate().year} ${(listedeDokumanSnapshot[index].get("tarih") as Timestamp).toDate().hour}:${(listedeDokumanSnapshot[index].get("tarih") as Timestamp).toDate().minute}"),
+                                          Text("${listedeDokumanSnapshot[index].get("yer")}"),
                                         ],
                                       )
                                     ],

@@ -4,13 +4,17 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:petbuddy/service/auth_service.dart';
+import 'package:petbuddy/service/ilan_ekle_service.dart';
 import 'package:petbuddy/service/stroge_service.dart';
 import 'package:provider/src/provider.dart';
 import 'package:provider/provider.dart';
 import 'giris_yap_sayfasi.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+
 
 
 class IlanEkle extends StatefulWidget {
@@ -21,24 +25,22 @@ class IlanEkle extends StatefulWidget {
 }
 
 class _IlanEkle extends State<IlanEkle> {
-  final StorageService storage = StorageService();
-
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final StorageService storage = StorageService();
+  final IlanEkleService _ilanEkleService =IlanEkleService();
+  CollectionReference petlerRef = FirebaseFirestore.instance.collection("Petler");
 
-
-
+  TextEditingController petAdiController = TextEditingController();
+  TextEditingController ilController = TextEditingController();
+  TextEditingController ilceController = TextEditingController();
+  TextEditingController yerAdiController = TextEditingController();
+  TextEditingController baslikController = TextEditingController();
+  List<DocumentSnapshot>? listedeDokumanSnapshot;
+  String? cinsiyeti,cinsi,turu,resim;
+  var ilan_tarihi=DateTime.now();
   @override
   Widget build(BuildContext context) {
-
-    String? secilenCinsiyet='Dişi';
-    List<String>? petlerList=['pet','erkek'];
-   FirebaseFirestore.instance.collection('Petler').where('user_id',isEqualTo: '${context.watch<AuthService>().user!.uid}').snapshots().listen((data) {
-        data.docs.forEach((doc) {petlerList.add(doc['ad']);
-      });
-    });
-    CollectionReference ilanlarRef = _firestore.collection("ilanlar");
-    CollectionReference PetlerRef = _firestore.collection("Petler");
-    String? secilenPet="pet";
+    final String user_id='${context.watch<AuthService>().user!.uid}';
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -48,110 +50,280 @@ class _IlanEkle extends State<IlanEkle> {
           ],
         ),
       ),
-      endDrawer: Drawer(
-        child: ListView(
-          children: [
-            DrawerHeader(child: Column(
-              children: [
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            children: [
+              Container(
+                height: 50,
+                width: 450,
+                padding: EdgeInsets.symmetric(vertical: 0, horizontal: 40),
+                margin: EdgeInsets.all(10),
+                child: TextFormField(controller: petAdiController,
+                  decoration: InputDecoration(
+                    hintText: "Petinizin Adını Girin",
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.orange.shade100,
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),onEditingComplete: (){
+                  setState(() {
 
-                Text(context.watch<AuthService>().user!.email!.toString()),
-                ElevatedButton(onPressed: ()async{
+                  });
+                  },
+                ),
+              ),//petadı
+              Container(
+                height: 50,
+                width: 450,
+                padding: EdgeInsets.symmetric(vertical: 0, horizontal: 40),
+                margin: EdgeInsets.all(10),
+                child: TextFormField(controller: ilController,
+                  decoration: InputDecoration(
+                    hintText: "İlinizi Girin",
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.orange.shade100,
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),onEditingComplete: (){
+                    setState(() {
 
-                  await context.read<AuthService>().signOut();
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ChangeNotifierProvider(
-                    create: (_)=>AuthService(),
-                    child: GirisYapSayfasi(),
+                    });
+                  },
+                ),
+              ),//il
+              Container(
+                height: 50,
+                width: 450,
+                padding: EdgeInsets.symmetric(vertical: 0, horizontal: 40),
+                margin: EdgeInsets.all(10),
+                child: TextFormField(controller: ilceController,
+                  decoration: InputDecoration(
+                    hintText: "İlçenizi Girin",
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.orange.shade100,
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),onEditingComplete: (){
+                    setState(() {
+
+                    });
+                  },
+                ),
+              ),//ilçe
+              Container(
+                height: 50,
+                width: 450,
+                padding: EdgeInsets.symmetric(vertical: 0, horizontal: 40),
+                margin: EdgeInsets.all(10),
+                child: TextFormField(controller: yerAdiController,
+                  decoration: InputDecoration(
+                    hintText: "Park adını Girin",
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.orange.shade100,
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),onEditingComplete: (){
+                    setState(() {
+
+                    });
+                  },
+                ),
+              ),//yer
+              Container(
+                height: 50,
+                width: 450,
+                padding: EdgeInsets.symmetric(vertical: 0, horizontal: 40),
+                margin: EdgeInsets.all(10),
+                child: TextFormField(controller: baslikController,
+                  decoration: InputDecoration(
+                    hintText: "Başlık Girin",
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.orange.shade100,
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),onEditingComplete: (){
+                    setState(() {
+
+                    });
+                  },
+                ),
+              ),//baslik
+              ElevatedButton(
+                  onPressed: () {
+                    DatePicker.showDateTimePicker(context,
+                        showTitleActions: true,
+                        minTime: DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day,DateTime.now().hour,DateTime.now().minute,),
+                        maxTime: DateTime(2022, 12, 31, 23, 59), onChanged: (date) {
+                          print('change $date in time zone ' +
+                              date.timeZoneOffset.inHours.toString());
+                        }, onConfirm: (date) {
+                          print('confirm $date');
+                          ilan_tarihi=date;
+                          print(ilan_tarihi);
+                          setState(() {
+
+                          });
+                        }, locale: LocaleType.tr);
+                  },
+                  child: Text(
+                    'İlan zamanını seçin',
+                    style: TextStyle(color: Colors.white),
+                  ),),
+              Text("Seçilen Tarih ${ilan_tarihi.day}/${ilan_tarihi.month}/${ilan_tarihi.year} ${ilan_tarihi.hour}:${ilan_tarihi.minute} "),
+              ElevatedButton(onPressed:() async {
+
+                Container(height: 1,
+                  child: StreamBuilder<QuerySnapshot>(
+                      stream: petlerRef.where("user_id",isEqualTo: user_id).where("ad",isEqualTo: petAdiController.text)
+                          .snapshots(),
+                      builder: (BuildContext context, AsyncSnapshot asyncSnapshot) {
+                        listedeDokumanSnapshot = asyncSnapshot.data.docs;
+                        return !asyncSnapshot.hasData ? Center(
+                          child: CircularProgressIndicator(),) : Flexible(
+                            child: ListView.builder(
+                                itemCount: listedeDokumanSnapshot!.length,
+                                itemBuilder: (context, index) {
+
+                                  cinsi=listedeDokumanSnapshot![index].get("cinsi");
+                                  cinsiyeti=listedeDokumanSnapshot![index].get("cinsiyeti");
+                                  turu=listedeDokumanSnapshot![index].get("turu");
+                                  resim=listedeDokumanSnapshot![index].get("resim");
+                                  return Column(
+                                    children: [
+                                    ],
+                                  );
+                                }));
+                      }
                   ),
-                  ));
-                }, child: Text("çıkış yap"),),
-              ],
-            ),),
+                );
 
-          ],
-        ),
-      ),
-      body: Center(
-        child:Column(
-          children: [
-            Container(
-              width: 300,
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(12),border: Border.all(color: Colors.grey.shade400)),
-              child: DropdownButton(
-                isExpanded: true,
-                value: secilenPet,
-                icon: Icon(Icons.keyboard_arrow_down),
-                items:petlerList.map((String items) {
-                  return DropdownMenuItem(
-                      value: items,
-                      child: Text(items)
-                  );
+
+
+                _ilanEkleService.IlanEkle(baslikController.text,cinsi!,turu! ,cinsiyeti!,user_id,resim!,ilan_tarihi,ilController.text,ilceController.text,yerAdiController.text).then((value){
+                  Fluttertoast.showToast(msg: "İlan eklendi");
+                });
+
+              }, child: Text("İLAN EKLE",style: TextStyle(color: Colors.white),)),
+
+
+          Container(height: 1,
+            child: StreamBuilder<QuerySnapshot>(
+                stream: petlerRef.where("user_id",isEqualTo: user_id).where("ad",isEqualTo: petAdiController.text)
+                    .snapshots(),
+                builder: (BuildContext context, AsyncSnapshot asyncSnapshot) {
+                  listedeDokumanSnapshot = asyncSnapshot.data.docs;
+                  return !asyncSnapshot.hasData ? Center(
+                    child: CircularProgressIndicator(),) : Flexible(
+                      child: ListView.builder(
+                          itemCount: listedeDokumanSnapshot!.length,
+                          itemBuilder: (context, index) {
+
+                            cinsi=listedeDokumanSnapshot![index].get("cinsi");
+                            cinsiyeti=listedeDokumanSnapshot![index].get("cinsiyeti");
+                            turu=listedeDokumanSnapshot![index].get("turu");
+                            resim=listedeDokumanSnapshot![index].get("resim");
+                            return Column(
+                              children: [
+                              ],
+                            );
+                          }));
                 }
-                ).toList(),
-                onChanged: (String? newValue){
-                  setState(() {
-                    secilenCinsiyet = newValue;
-                  });
-                },
-              ),
             ),
+          ),
 
-             DropdownButton(
-                isExpanded: true,
-                //hint: Text("Petinizi Seçin"),
-                value: secilenPet,
-                icon: Icon(Icons.keyboard_arrow_down),
-                items: petlerList.map((String oankipet) =>DropdownMenuItem(child: Text(oankipet),value: oankipet,) ).toList(),
-                onChanged: (String? yeniDeger){
-                  setState(() {
-                    secilenPet=yeniDeger!;
-                    print(secilenPet);
-                    print(petlerList);
-                  });
 
-                },
-              ),
-          ],
+
+            ],
+          ),
         ),
-
       ),
     );
   }
 }
 
 
-/*
-StreamBuilder<QuerySnapshot>(
-                        stream: PetlerRef.where('user_id',isEqualTo: '${context.watch<AuthService>().user!.uid}').snapshots(),
-                        builder:(BuildContext context, AsyncSnapshot asyncSnapshot){
-                          try {
-                            List<DocumentSnapshot> listedeDokumanSnapshot =asyncSnapshot.data.docs;
-                            return !asyncSnapshot.hasData ? Center(child: CircularProgressIndicator())
-                                : Flexible(
-                              child: ListView.builder(
-                                  itemCount: listedeDokumanSnapshot.length,
-                                  itemBuilder: (context, index) {
-                                    petlerList.add(listedeDokumanSnapshot[index].get('ad'));
-                                    return Text(listedeDokumanSnapshot[index].get('ad'));
-                                  }),
-                            );
-                          }catch(e){
-                            print("hata $e");
-                            return Center(child: LinearProgressIndicator(),);
-                          }
-                        } ,
-                      ),
+class CustomPicker extends CommonPickerModel {
+  String digits(int value, int length) {
+    return '$value'.padLeft(length, "0");
+  }
 
+  CustomPicker({DateTime? currentTime, LocaleType? locale})
+      : super(locale: locale) {
+    this.currentTime = currentTime ?? DateTime.now();
+    this.setLeftIndex(this.currentTime.hour);
+    this.setMiddleIndex(this.currentTime.minute);
+    this.setRightIndex(this.currentTime.second);
+  }
 
+  @override
+  String? leftStringAtIndex(int index) {
+    if (index >= 0 && index < 24) {
+      return this.digits(index, 2);
+    } else {
+      return null;
+    }
+  }
 
+  @override
+  String? middleStringAtIndex(int index) {
+    if (index >= 0 && index < 60) {
+      return this.digits(index, 2);
+    } else {
+      return null;
+    }
+  }
 
+  @override
+  String? rightStringAtIndex(int index) {
+    if (index >= 0 && index < 60) {
+      return this.digits(index, 2);
+    } else {
+      return null;
+    }
+  }
 
+  @override
+  String leftDivider() {
+    return "|";
+  }
 
+  @override
+  String rightDivider() {
+    return "|";
+  }
 
+  @override
+  List<int> layoutProportions() {
+    return [1, 2, 1];
+  }
 
-
-
- petlerList.map((String oankipet) =>DropdownMenuItem(child: Text(oankipet),value: oankipet,) ).toList()
-
-
-
- */
+  @override
+  DateTime finalTime() {
+    return currentTime.isUtc
+        ? DateTime.utc(
+        currentTime.year,
+        currentTime.month,
+        currentTime.day,
+        this.currentLeftIndex(),
+        this.currentMiddleIndex(),
+        this.currentRightIndex())
+        : DateTime(
+        currentTime.year,
+        currentTime.month,
+        currentTime.day,
+        this.currentLeftIndex(),
+        this.currentMiddleIndex(),
+        this.currentRightIndex());
+  }
+}

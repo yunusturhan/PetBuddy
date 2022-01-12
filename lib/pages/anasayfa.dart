@@ -2,8 +2,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:petbuddy/pages/giris_yap_sayfasi.dart';
-import 'package:petbuddy/pages/ilanekleme.dart';
+import 'package:petbuddy/pages/ilan_ekle.dart';
 import 'package:petbuddy/pages/ilanlar_sayfasi.dart';
+import 'package:petbuddy/pages/inputrow.dart';
 import 'package:petbuddy/pages/kullanici_ilanlari.dart';
 import 'package:petbuddy/pages/kullanici_petleri.dart';
 import 'package:petbuddy/pages/kullanici_profil_sayfasi.dart';
@@ -19,7 +20,7 @@ class Anasayfa extends StatefulWidget {
   @override
   _AnasayfaState createState() => _AnasayfaState();
 }
-var sayfaList = [Ilanlar(),IlanEkle(),MesajKutusu()];
+var sayfaList = [Ilanlar(),IlanEkle(),InputRowTest()];
 var sayfaIndex=0;
 
 class _AnasayfaState extends State<Anasayfa> {

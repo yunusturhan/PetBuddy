@@ -59,7 +59,7 @@ class _Petlerim extends State<Petlerim> {
                     child: ListView.builder(
                         itemCount: listedeDokumanSnapshot.length,
                         itemBuilder: (context, index) {
-                          if(listedeDokumanSnapshot.length>0)
+                          if(listedeDokumanSnapshot.isNotEmpty)
                           {
                             return Container(
                               height: 220,
@@ -86,7 +86,7 @@ class _Petlerim extends State<Petlerim> {
                                                 Radius.circular(10)),
                                             color: Colors.white),
                                         margin: EdgeInsets.all(5),
-                                        child: ClipRRect(borderRadius: BorderRadius.all(Radius.circular(8),),child: Image.network('${listedeDokumanSnapshot[index].get("resim")}',fit: BoxFit.fill,)),
+                                        child: ClipRRect(borderRadius: BorderRadius.all(Radius.circular(8),),child: Image.network('${listedeDokumanSnapshot[index].get("resim")}',fit: BoxFit.cover,)),
                                       ),
                                       Column(mainAxisAlignment: MainAxisAlignment.start,
                                         crossAxisAlignment: CrossAxisAlignment.start,

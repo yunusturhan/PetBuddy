@@ -55,7 +55,7 @@ class AuthService with ChangeNotifier {
       await _firestore
           .collection("Kullanici")
           .doc(_user!.uid.toString())
-          .set({'user_adi': user_isim, 'email': email,'user_id':_user!.uid.toString()});
+          .set({'user_adi': user_isim, 'email': email,'user_id':_user!.uid.toString(),'profil_resmi':"https://firebasestorage.googleapis.com/v0/b/petbuddyim.appspot.com/o/Kullanici%2Fdefault.png?alt=media&token=114ff80d-752b-4b3c-bf64-adf6388f7ee1",'aciklama':" "});
       debugPrint(_user!.uid.toString());
       return _yeniKullanici;
     } catch (e) {

@@ -66,7 +66,7 @@ class _KullaniciIlanlarState extends State<KullaniciIlanlar> {
                             child: ListView.builder(
                                 itemCount: listedeDokumanSnapshot.length,
                                 itemBuilder: (context, index) {
-                                  if (listedeDokumanSnapshot.length > 0) {
+                                  if (listedeDokumanSnapshot.isNotEmpty) {
                                     return Container(
                                       height: 250,
                                       width: 400,
@@ -113,7 +113,7 @@ class _KullaniciIlanlarState extends State<KullaniciIlanlar> {
                                                       '${listedeDokumanSnapshot[index].get("resim")}',
                                                       width: 150,
                                                       height: 150,
-                                                      fit: BoxFit.fill,
+                                                      fit: BoxFit.cover,
                                                     )),
                                               ),
                                               Column(
@@ -141,7 +141,8 @@ class _KullaniciIlanlarState extends State<KullaniciIlanlar> {
                                         ],
                                       ),
                                     );
-                                  } else
+                                  }
+                                  else
                                     return Center(
                                         child: Text("Lütfen ilan ekleyin"));
                                 }),

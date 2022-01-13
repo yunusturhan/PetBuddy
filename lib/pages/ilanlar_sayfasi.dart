@@ -150,7 +150,6 @@ class _IlanlarState extends State<Ilanlar> {
                       child: ListView.builder(
                           itemCount: listedeDokumanSnapshot.length,
                           itemBuilder: (context, index) {
-
                             return Container(
                               height: 250,
                               width: 400,
@@ -173,6 +172,7 @@ class _IlanlarState extends State<Ilanlar> {
                                   ),
                                   Row(
                                     children: [
+                                      //Image.network(src).,
                                       Container(
                                         height: 150,
                                         width: 150,
@@ -183,7 +183,7 @@ class _IlanlarState extends State<Ilanlar> {
                                             color: Colors.white),
                                         margin: EdgeInsets.all(5),
                                         child: ClipRRect(borderRadius: BorderRadius.all(Radius.circular(8),),
-                                            child: Image.network('${listedeDokumanSnapshot[index].get("resim")}',fit: BoxFit.fill),
+                                          child: Image.network('${listedeDokumanSnapshot[index].get("resim")}',fit: BoxFit.cover),
                                         ),
                                       ),
                                       Column(
@@ -196,6 +196,8 @@ class _IlanlarState extends State<Ilanlar> {
                                               "${listedeDokumanSnapshot[index].get("turu")}"),
                                           Text(
                                               "${(listedeDokumanSnapshot[index].get("tarih") as Timestamp).toDate().day}/${(listedeDokumanSnapshot[index].get("tarih") as Timestamp).toDate().month}/${(listedeDokumanSnapshot[index].get("tarih") as Timestamp).toDate().year} ${(listedeDokumanSnapshot[index].get("tarih") as Timestamp).toDate().hour}:${(listedeDokumanSnapshot[index].get("tarih") as Timestamp).toDate().minute}"),
+                                          Text("${listedeDokumanSnapshot[index].get("il")}"),
+                                          Text("${listedeDokumanSnapshot[index].get("ilce")}"),
                                           Text("${listedeDokumanSnapshot[index].get("yer")}"),
                                         ],
                                       )
@@ -276,6 +278,8 @@ class _IlanlarState extends State<Ilanlar> {
                                 ],
                               ),
                             );
+
+
                           }),
                     );
                   } catch (e) {

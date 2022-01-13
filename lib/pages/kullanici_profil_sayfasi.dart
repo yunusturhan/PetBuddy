@@ -27,13 +27,8 @@ class _KullaniciProfiliState extends State<KullaniciProfili> {
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference ilanlarRef = _firestore.collection("ilanlar");
     CollectionReference KullaniciRef = _firestore.collection("Kullanici");
-    var isim=KullaniciRef.doc(context.watch<AuthService>().user!.uid);
-    bilgiGetir() async{
-      DocumentSnapshot userDetail = await _firestore.collection('Kullanici').doc(context.watch<AuthService>().user!.uid).get();
-     // var adi=userDetail.data()![user_adi];
-    }
+
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -119,12 +114,73 @@ class _KullaniciProfiliState extends State<KullaniciProfili> {
       body: Center(
         child:Column(
           children: [
-            ElevatedButton.icon(icon:Icon(Icons.campaign_outlined,color: Colors.white,), label:Text("İlanlarım",style: TextStyle(color: Colors.white),),onPressed: (){})
+            Container(height: 200,
+              child: StreamBuilder<QuerySnapshot>(
+                stream: KullaniciRef.where('user_id',isEqualTo: '${context.watch<AuthService>().user!.uid}').snapshots(),
+                builder:(BuildContext context, AsyncSnapshot asyncSnapshot){
+                  try {
+                    List<DocumentSnapshot> listedeDokumanSnapshot =asyncSnapshot.data.docs;
+
+
+                    return !asyncSnapshot.hasData ? Center(child: Text("!"))
+                        : ListView.builder(
+                            itemCount: listedeDokumanSnapshot.length,
+                            itemBuilder: (context, index) {
+                              if(listedeDokumanSnapshot.isNotEmpty)
+                              {
+                                return Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      height: 150,
+                                      width: 150,
+                                      decoration: BoxDecoration(
+                                          border: Border.all(width: 1,color: Colors.orange),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(100)),
+                                          color: Colors.white),
+                                      margin: EdgeInsets.all(5),
+                                      child: ClipRRect(borderRadius: BorderRadius.all(Radius.circular(100),),child: Image.network('${listedeDokumanSnapshot[index].get("profil_resmi")}',fit: BoxFit.cover,)),
+                                    ),
+
+                                    Column(mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "${listedeDokumanSnapshot[index].get('aciklama')}",
+                                          style: TextStyle(fontSize: 18),
+                                        ),
+                                        SizedBox(height: 15,),
+                                      ],
+                                    ),
+                                   ],
+                                );
+                              }
+                              else return Center(child: Text(""));
+                            });
+                  }catch(e){
+                    print("hata $e");
+                    return Center(child: LinearProgressIndicator(),);
+                  }
+                } ,
+              ),
+            ),
+            Row(
+              children: [
+
+              ],
+            ),
+            SizedBox(width: 250,
+                child: ElevatedButton.icon(icon:Icon(Icons.campaign_outlined,color: Colors.white,), label:Text("İlanlarım",style: TextStyle(color: Colors.white),),onPressed: (){
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ChangeNotifierProvider(
+                    create: (_)=>AuthService(),
+                    child: KullaniciIlanlar(),
+                  )));
+                }))
 
           ],
         )),
     );
   }
-//DateFormat('yyyy-MM-dd').format(listedeDokumanSnapshot[index].get("tarih"))
 
 }

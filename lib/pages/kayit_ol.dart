@@ -224,6 +224,8 @@ class _KayitOlSayfasiState extends State<KayitOlSayfasi> {
                                 ]));
 
                         context.read<AuthService>().createUserWithEmailandPassword(_eposta!, _sifre!,user_isim!);
+                        AuthService().signOut();
+
 
                       }print("Kayda engel bir şey yok");
                     },

@@ -114,16 +114,23 @@ class _KullaniciProfiliState extends State<KullaniciProfili> {
       body: Center(
         child:Column(
           children: [
-            Container(height: 200,
-              child: StreamBuilder<QuerySnapshot>(
-                stream: KullaniciRef.where('user_id',isEqualTo: '${context.watch<AuthService>().user!.uid}').snapshots(),
-                builder:(BuildContext context, AsyncSnapshot asyncSnapshot){
-                  try {
-                    List<DocumentSnapshot> listedeDokumanSnapshot =asyncSnapshot.data.docs;
+            Card(color: Colors.blueGrey.shade100,
+              margin: EdgeInsets.all(5),shape:RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(0.0),
+        ),
+              elevation: 5,
+              child: Column(
+              children: [
+                Container(height: 200,
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: KullaniciRef.where('user_id',isEqualTo: '${context.watch<AuthService>().user!.uid}').snapshots(),
+                    builder:(BuildContext context, AsyncSnapshot asyncSnapshot){
+                      try {
+                        List<DocumentSnapshot> listedeDokumanSnapshot =asyncSnapshot.data.docs;
 
 
-                    return !asyncSnapshot.hasData ? Center(child: Text("!"))
-                        : ListView.builder(
+                        return !asyncSnapshot.hasData ? Center(child: Text("!"))
+                            : ListView.builder(
                             itemCount: listedeDokumanSnapshot.length,
                             itemBuilder: (context, index) {
                               if(listedeDokumanSnapshot.isNotEmpty)
@@ -147,36 +154,55 @@ class _KullaniciProfiliState extends State<KullaniciProfili> {
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
                                         Text(
+                                          "${listedeDokumanSnapshot[index].get('user_adi')}",
+                                          style: TextStyle(fontSize: 18),
+                                        ),
+                                        Text(
                                           "${listedeDokumanSnapshot[index].get('aciklama')}",
                                           style: TextStyle(fontSize: 18),
                                         ),
                                         SizedBox(height: 15,),
                                       ],
                                     ),
-                                   ],
+                                  ],
                                 );
                               }
                               else return Center(child: Text(""));
                             });
-                  }catch(e){
-                    print("hata $e");
-                    return Center(child: LinearProgressIndicator(),);
-                  }
-                } ,
-              ),
-            ),
-            Row(
-              children: [
+                      }catch(e){
+                        print("hata $e");
+                        return Center(child: LinearProgressIndicator(),);
+                      }
+                    } ,
+                  ),
+                ),
+                Row(crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SizedBox(width:120,child: ElevatedButton.icon(icon:Icon(Icons.face_outlined,color: Colors.white,), label:Text("Resmini Değiştir",style: TextStyle(color: Colors.white),),onPressed: (){}, )),
+                    SizedBox(width:120,child: ElevatedButton.icon(icon:Icon(Icons.account_box_outlined,color: Colors.white,), label:Text("Profili DÜzenle",style: TextStyle(color: Colors.white),),onPressed: (){}, )),
 
+
+                  ],
+                ),
               ],
-            ),
+            ),),
+            SizedBox(height: 20,),
             SizedBox(width: 250,
                 child: ElevatedButton.icon(icon:Icon(Icons.campaign_outlined,color: Colors.white,), label:Text("İlanlarım",style: TextStyle(color: Colors.white),),onPressed: (){
                   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ChangeNotifierProvider(
                     create: (_)=>AuthService(),
                     child: KullaniciIlanlar(),
                   )));
-                }))
+                })),
+
+            SizedBox(width: 250,
+                child: ElevatedButton.icon(icon:Icon(Icons.pets_outlined,color: Colors.white,), label:Text("Petlerim",style: TextStyle(color: Colors.white),),onPressed: (){
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ChangeNotifierProvider(
+                    create: (_)=>AuthService(),
+                    child: Petlerim(),
+                  )));
+                })),
 
           ],
         )),

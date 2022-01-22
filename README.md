@@ -1,6 +1,8 @@
 # petbuddy
 
 Bu proje benim Konya Teknik Üniversitesi Bilgisayar Mühendisliği bölümü bitirme projemdir.
+Proje Flutter - Dart ile yapılmaktadır.
+Veritabanı Firebase kullanılmaktadır.
 
 
 ![1](https://user-images.githubusercontent.com/51891759/150618972-c30212cb-9594-4aa4-bfe0-45a3edb48aa9.jpeg)

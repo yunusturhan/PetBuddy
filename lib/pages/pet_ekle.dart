@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:petbuddy/service/petekle_service.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PetEkle extends StatefulWidget {
 
@@ -203,7 +201,8 @@ class _PetEkle extends State<PetEkle> {
   void _onImageButtonPressed(ImageSource source,
       {required BuildContext context}) async {
     try {
-      final pickedFile = await _pickerImage.pickImage(source: source);
+      final pickedFile = await _pickerImage.pickImage(source: source,maxHeight: 300,maxWidth:
+      300,imageQuality: 50);
       setState(() {
         profileImage = pickedFile!;
         print("dosyaya geldim: $profileImage");

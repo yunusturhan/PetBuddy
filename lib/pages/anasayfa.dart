@@ -1,6 +1,9 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:petbuddy/pages/cevremdekiler.dart';
 import 'package:petbuddy/pages/giris_yap_sayfasi.dart';
 import 'package:petbuddy/pages/ilan_ekle.dart';
 import 'package:petbuddy/pages/ilanlar_sayfasi.dart';
@@ -20,19 +23,42 @@ class Anasayfa extends StatefulWidget {
   @override
   _AnasayfaState createState() => _AnasayfaState();
 }
-var sayfaList = [Ilanlar(),IlanEkle(),InputRowTest()];
+var sayfaList = [Ilanlar(),IlanEkle(),Cevremdekiler()];
 var sayfaIndex=0;
 
 class _AnasayfaState extends State<Anasayfa> {
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final StorageService storage = StorageService();
+
+  @override
+  void initState(){
+    // TODO: implement initState
+
+    super.initState();
+  }
+  var konum;
+  var konumu;
+  var user_idsi;
+
   @override
   Widget build(BuildContext context) {
-
+    user_idsi=context.watch<AuthService>().user!.uid;
+    print(user_idsi);
 
     CollectionReference KullaniciRef = _firestore.collection("Kullanici");
- 
+    //konumGuncelleme();
+   // print("${konumu["x_koordinati"]} x");
+    konumGuncelleme()async{
+      print("güncelleme başladı");
+      konum= await Geolocator.getCurrentPosition(desiredAccuracy:LocationAccuracy.best);
+      var basKonum=LatLng(konum.latitude, konum.longitude);
+      konumu={"x_konumu":konum.latitude,"y_konumu":konum.longitude};
+      print("${konum.latitude} ${konum.longitude}   konumlar");
+      KullaniciRef.doc(user_idsi).update({"x_koordinati":konumu["x_konumu"],"y_koordinati":konumu["y_konumu"]});
+      print("güncelleme bitti");
+    }
+    konumGuncelleme();
     return Scaffold(
       endDrawer: Drawer(
         child: ListView(
@@ -43,9 +69,13 @@ class _AnasayfaState extends State<Anasayfa> {
 
                   StreamBuilder<QuerySnapshot>(
                       stream: KullaniciRef.where('user_id',isEqualTo:context.watch<AuthService>().user!.uid ).snapshots(),
+
                       builder: (BuildContext context, AsyncSnapshot asyncSnapshot) {
+
+
                         try {
                           List<DocumentSnapshot> listedeDokumanSnapshot =asyncSnapshot.data.docs;
+
 
 
                           return !asyncSnapshot.hasData ? CircleAvatar(backgroundImage: AssetImage("assets/images/petpati.png"),)
@@ -159,9 +189,6 @@ class _AnasayfaState extends State<Anasayfa> {
 
         ],
       ),
-
-
     );
-
   }
 }

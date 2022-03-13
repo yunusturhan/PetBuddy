@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 class MesajKutusu extends StatefulWidget {
   const MesajKutusu({Key? key}) : super(key: key);
@@ -8,15 +10,15 @@ class MesajKutusu extends StatefulWidget {
 
 class _MesajKutusuState extends State<MesajKutusu> {
   @override
+
   Widget build(BuildContext context) {
     return Center(
 
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          LinearProgressIndicator(),
-          Text("hebelerx")
-        ],
+
+          ],
       ),
     );
   }

@@ -131,8 +131,8 @@ tamam bakmıyorum doğrusunu gir''',
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(25),
                   child: ElevatedButton(
-                    onPressed: () {
-
+                    onPressed: () async{
+                      await
                       context.read<AuthService>().signInUserWithEmailandPassword(_eposta!, _sifre!);
                       //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Anasayfa()));
                        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>ChangeNotifierProvider(

@@ -30,7 +30,7 @@ class _Petlerim extends State<Petlerim> {
 
   @override
   Widget build(BuildContext context) {
-String? user_id=context.watch<AuthService>().user!.uid;
+  String? user_id=context.watch<AuthService>().user!.uid;
 
     CollectionReference ilanlarRef = _firestore.collection("ilanlar");
     CollectionReference PetlerRef = _firestore.collection("Petler");
@@ -51,7 +51,7 @@ String? user_id=context.watch<AuthService>().user!.uid;
               stream: PetlerRef.where('user_id',isEqualTo: '${context.watch<AuthService>().user!.uid}').snapshots(),
               builder:(BuildContext context, AsyncSnapshot asyncSnapshot){
                 try {
-                  List<DocumentSnapshot> listedeDokumanSnapshot =asyncSnapshot.data.docs;
+                  List<DocumentSnapshot> listedeDokumanSnapshot =asyncSnapshot.data.docs!;
 
 
                   return !asyncSnapshot.hasData ? Center(child: Text("Petlerim Sayfasından pet eklemelisiniz!"))

@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:petbuddy/.env.dart';
 import 'package:petbuddy/model/yol_model.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';

@@ -2,8 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:petbuddy/pages/kullanici_ilanlari.dart';
 import 'package:petbuddy/pages/kullanici_profil_sayfasi.dart';
+import 'package:petbuddy/pages/mesaj_detay.dart';
 import 'package:petbuddy/pages/pet_ekle.dart';
 import 'package:petbuddy/pages/kullanici_petleri.dart';
+import 'package:petbuddy/service/mesaj_service.dart';
 import 'package:petbuddy/service/petekle_service.dart';
 import 'package:petbuddy/service/auth_service.dart';
 import 'package:petbuddy/pages/giris_yap_sayfasi.dart';
@@ -25,6 +27,7 @@ class _IlanlarState extends State<Ilanlar> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final StorageService storage = StorageService();
   PetEkleService _petEkleService = PetEkleService();
+  MesajEkleService _mesajEkleService=MesajEkleService();
 
 
   @override
@@ -150,6 +153,7 @@ class _IlanlarState extends State<Ilanlar> {
                       child: ListView.builder(
                           itemCount: listedeDokumanSnapshot.length,
                           itemBuilder: (context, index) {
+                            print(kullanici_idsi);
                             return Container(
                               height: 250,
                               width: 400,
@@ -199,6 +203,7 @@ class _IlanlarState extends State<Ilanlar> {
                                           Text("${listedeDokumanSnapshot[index].get("il")}"),
                                           Text("${listedeDokumanSnapshot[index].get("ilce")}"),
                                           Text("${listedeDokumanSnapshot[index].get("yer")}"),
+                                          Text("${listedeDokumanSnapshot[index].get("user_id")}",style: TextStyle(fontSize: 12),),
                                         ],
                                       )
                                     ],
@@ -210,7 +215,14 @@ class _IlanlarState extends State<Ilanlar> {
                                     children: [
                                       Expanded(
                                         child: ElevatedButton(
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            _mesajEkleService.MesajEkle(kullanici_idsi,listedeDokumanSnapshot[index].get("user_id"),"Ahmet","Mehmet"
+                                               );
+                                          //  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>MesajDetay(col: listedenDokumanSnapshot[index].get("doc_id"),kullanici_id: kullanici_idsi,)));
+
+
+
+                                          },
                                           child: Text(
                                             "Mesaj Gönder",
                                             style: TextStyle(

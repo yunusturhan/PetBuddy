@@ -23,7 +23,7 @@ class Anasayfa extends StatefulWidget {
   @override
   _AnasayfaState createState() => _AnasayfaState();
 }
-var sayfaList = [Ilanlar(),IlanEkle(),Cevremdekiler()];
+var sayfaList = [const Ilanlar(),const IlanEkle(),const MesajKutusu()];
 var sayfaIndex=0;
 
 class _AnasayfaState extends State<Anasayfa> {
@@ -47,6 +47,7 @@ class _AnasayfaState extends State<Anasayfa> {
     print(user_idsi);
 
     CollectionReference KullaniciRef = _firestore.collection("Kullanici");
+    CollectionReference MesajlarRef = _firestore.collection("Mesajlar");
     //konumGuncelleme();
    // print("${konumu["x_koordinati"]} x");
     konumGuncelleme()async{

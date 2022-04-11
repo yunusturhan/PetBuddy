@@ -25,9 +25,11 @@ class _CevremdekilerState extends State<Cevremdekiler> {
   Marker? _origin;
   Marker? _destination;
   Directions? _info;
+  Directions? kullaniciInfo;
   double enlem = 0.0, boylam = 0.0;
   var konum;
   var bitisKonum;
+  List<dynamic>? mesafeListe;
 
   LatLng basKonum=LatLng(40.18233060,29.0111507);
 
@@ -36,150 +38,114 @@ class _CevremdekilerState extends State<Cevremdekiler> {
     _googleMapController!.dispose();
     super.dispose();
   }
+  var kullanici_ili;
+  var kullanici_ilcesi;
+  var kullanici_x_konumu;
+  var kullanici_y_konumu;
+  List<dynamic> mesafeList=new List.filled(100, null, growable: false);
+  List<dynamic> konumList=new List.filled(100, null, growable: false);
 
   @override
   Widget build(BuildContext context) {
 
     String? user_id=context.watch<AuthService>().user!.uid;
     CollectionReference kullaniciRef = _firestore.collection("Kullanici");
-
-
-
+    var userBilgi;
 
 
     kullaniciIliGetir()async{
-
-
       DocumentSnapshot userDetail=await kullaniciRef.doc(user_id).get();
-
-      var userBilgi=await kullaniciRef.doc(user_id).get();
-      print(userBilgi.data());
+      userBilgi=await kullaniciRef.doc(user_id).get();
+      kullanici_ili=userBilgi.data()!['il'];
+      kullanici_ilcesi=userBilgi.data()!['ilce'];
+      kullanici_x_konumu=userBilgi.data()!['x_koordinati'];
+      kullanici_y_konumu=userBilgi.data()!['y_koordinati'];
+      //print(userBilgi.data());
     }
     kullaniciIliGetir();
 
+
+    konumHesapla(int index) async {
+      //print((user_id !=null) ? user_id :" user id boş");
+      // Get directions
+      final directions = await DirectionsRepository()
+          .getDirections(origin: basKonum, destination: bitisKonum);
+      setState(() => _info = directions);
+      mesafeList[index]=_info;
+      print(_info!.totalDuration);
+
+    }
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
         title: const Text('Çevremdekiler'),
-        actions: [
-          if (_origin != null)
-            TextButton(
-              onPressed: () => _googleMapController!.animateCamera(
-                CameraUpdate.newCameraPosition(
-                  CameraPosition(
-                    target: _origin!.position,
-                    zoom: 14.5,
-                    tilt: 50.0,
-                  ),
-                ),
-              ),
-              style: TextButton.styleFrom(
-                primary: Colors.green,
-                textStyle: const TextStyle(fontWeight: FontWeight.w600),
-              ),
-              child: const Text('ORIGIN'),
-            ),
-          if (_destination != null)
-            TextButton(
-              onPressed: () => _googleMapController!.animateCamera(
-                CameraUpdate.newCameraPosition(
-                  CameraPosition(
-                    target: _destination!.position,
-                    zoom: 14.5,
-                    tilt: 50.0,
-                  ),
-                ),
-              ),
-              style: TextButton.styleFrom(
-                primary: Colors.blue,
-                textStyle: const TextStyle(fontWeight: FontWeight.w600),
-              ),
-              child: const Text('DEST'),
-            )
-        ],
+
       ),
       body: Stack(
         alignment: Alignment.center,
         children: [
 
           StreamBuilder<QuerySnapshot>(
-              stream: kullaniciRef
-                  .where('user_id',
-                  isEqualTo: '${context.watch<AuthService>().user!.uid}')
-                  .snapshots(),
+              stream: kullaniciRef.snapshots(),
               builder: (BuildContext context, AsyncSnapshot asyncSnapshot) {
+                kullaniciIliGetir();
                 try {
                   List<DocumentSnapshot> listedeDokumanSnapshot =
                       asyncSnapshot.data.docs;
 
                   return !asyncSnapshot.hasData
                       ? Center(child: CircularProgressIndicator())
-                      : Flexible(
-                    child: ListView.builder(
-                        itemCount: listedeDokumanSnapshot.length,
-                        itemBuilder: (context, index) {
-                          if (listedeDokumanSnapshot.isNotEmpty) {
-                            return Container(
-                              height: 250,
-                              width: 400,
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      width: 1,
-                                      color: Colors.grey.shade400),
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(20)),
-                                  color: Color.fromRGBO(
-                                      205, 195, 146, 100)),
-                              margin: EdgeInsets.all(5),
-                              child: Column(
-                                mainAxisAlignment:
-                                MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "${listedeDokumanSnapshot[index].get('user_adi')}",
-                                    style: TextStyle(fontSize: 18),
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Row(
-                                    children: [
+                      : ListView.builder(
+                          itemCount: listedeDokumanSnapshot.length,
+                          itemBuilder: (context, index){
+                            if (listedeDokumanSnapshot.isNotEmpty && listedeDokumanSnapshot[index].get('user_id')!=user_id
+                               && listedeDokumanSnapshot[index].get('il')==kullanici_ili
+                            ) {
+                              print(kullanici_ili);
+                              print(index);
+                              var pos= LatLng(listedeDokumanSnapshot[index].get('x_koordinati'), listedeDokumanSnapshot[index].get('y_koordinati'));
+                              konumList[index]=pos;
 
-                                    ],
-                                  ),
 
-                                ],
-                              ),
-                            );
-                          }
-                          else
-                            return Center(
-                                child: Text("Lütfen ilan ekleyin"));
-                        }),
-                  );
+                              //mesafeList[index] =_info!;
+                              //kullaniciInfo=_info;
+                              return Container(
+                                height: 150,
+                                //width: 100,
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        width: 1,
+                                        color: Colors.grey.shade400),
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(20)),
+                                    color: Color.fromRGBO(
+                                        205, 195, 146, 100)),
+                                margin: EdgeInsets.all(5),
+                                child: Column(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "${listedeDokumanSnapshot[index].get('user_adi')} ${index}",
+                                      style: TextStyle(fontSize: 18),
+                                    ),
+                               Text("${listedeDokumanSnapshot[index].get('il')}"),
+                                    if (mesafeList[index]!= null)
+                                    Text(mesafeList[index].totalDuration),
+                                  ],
+                                ),
+                              );
+                            }
+                            else
+                              return SizedBox(width: 0.0001,);
+                          });
                 } catch (e) {
                   print("İnternetten veri gelene kadar beklenecek");
                   return Center(child: LinearProgressIndicator());
                 }
               }),
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          if (_info != null)
+            /*
             Positioned(
               top: 20.0,
               child: Container(
@@ -207,12 +173,24 @@ class _CevremdekilerState extends State<Cevremdekiler> {
                 ),
               ),
             ),
+          */
         ],
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColor,
         foregroundColor: Colors.black,
         onPressed: () async {
+          for(int i=0;i<100;i++){
+            if(konumList[i] !=null){
+              var pos= LatLng(konumList[i].latitude,konumList[i].longtitude);
+              _addMarker(konumList[i]);
+              konumHesapla(i);
+            }
+          }
+
+
+
+
           print((user_id !=null) ? user_id :" user id boş");
           // Get directions
           final directions = await DirectionsRepository()
@@ -230,7 +208,7 @@ class _CevremdekilerState extends State<Cevremdekiler> {
   void _addMarker(LatLng pos) async {
     konum= await Geolocator.getCurrentPosition(desiredAccuracy:LocationAccuracy.best);
     bitisKonum=pos;
-    basKonum=LatLng(konum.latitude, konum.longitude);
+    basKonum=LatLng(kullanici_x_konumu,kullanici_y_konumu);
 
 
 
@@ -252,8 +230,6 @@ class _CevremdekilerState extends State<Cevremdekiler> {
         position: pos,
       );
     });
-
-
 
   }
 }

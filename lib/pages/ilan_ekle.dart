@@ -306,8 +306,8 @@ class _IlanEkle extends State<IlanEkle> {
               }, child: Text("İLAN EKLE",style: TextStyle(color: Colors.white),)),
 
 
-          Container(width: 1,
-            height: 1,
+          SizedBox(
+            width: 1,height: 1,
             child: StreamBuilder<QuerySnapshot>(
                 stream: petlerRef.where("user_id",isEqualTo: user_id).where("ad",isEqualTo: petAdiController.text)
                     .snapshots(),

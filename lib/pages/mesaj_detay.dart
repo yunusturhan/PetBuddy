@@ -23,6 +23,13 @@ class _MesajDetayState extends State<MesajDetay> {
     String doc=super.widget.col;
 
     CollectionReference mesajlarRef = _firestore.collection("Mesajlar").doc(doc).collection("mesajIcerigi");
+    CollectionReference mesajTabloRef=_firestore.collection("Mesajlar");
+    CollectionReference KullaniciRef=_firestore.collection("Kullanici");
+    var kullanici1_id,kullanici2_id;
+    var kullanici1_x,kullanici1_y;
+    var kullanici2_x,kullanici2_y;
+
+
     return Scaffold(
       appBar: AppBar(
         title: Text("${super.widget.col}"),
@@ -30,6 +37,12 @@ class _MesajDetayState extends State<MesajDetay> {
       body: Center(
         child: Column(
           children: [
+
+
+
+            
+
+            
 
             SizedBox(height: 5,),
             StreamBuilder<QuerySnapshot>(
@@ -159,17 +172,30 @@ class _MesajDetayState extends State<MesajDetay> {
             suffixIcon: IconButton(
               icon: Icon(Icons.arrow_forward_outlined
               ),
-              onPressed: () {
-                setState(() {
+              onPressed: ()async {
 
-                  _mesajDetayEkleService.MesajDetayEkle(mesajController.text,super.widget.kullanici_id, super.widget.col);
-                  mesajController.text="";
+                print("${super.widget.col}");
+
+
+                mesajTabloRef.doc(doc).update({if("kullanici1_id"==super.widget.kullanici_id) "k00ullanici1_okuduMu":true});
+                mesajTabloRef.doc(doc).update({if("kullanici2_id"==super.widget.kullanici_id) "kullanici2_okuduMu":true});
+
+
+
+
+
+                _mesajDetayEkleService.MesajDetayEkle(mesajController.text,super.widget.kullanici_id, super.widget.col);
+                mesajController.text="";
+                setState((){
                 });
               },
             ),
 
           ),
         ),
+
+
+
           ],
         ),
       ),

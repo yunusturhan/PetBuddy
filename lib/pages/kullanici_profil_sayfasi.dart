@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:petbuddy/pages/kullanici_hobiler_sayfasi.dart';
 import 'package:petbuddy/pages/kullanici_ilanlari.dart';
 import 'package:petbuddy/pages/pet_ekle.dart';
 import 'package:petbuddy/pages/kullanici_petleri.dart';
@@ -201,6 +202,13 @@ class _KullaniciProfiliState extends State<KullaniciProfili> {
                   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ChangeNotifierProvider(
                     create: (_)=>AuthService(),
                     child: Petlerim(),
+                  )));
+                })),
+            SizedBox(width: 250,
+                child: ElevatedButton.icon(icon:Icon(Icons.sports_tennis_outlined,color: Colors.white,), label:Text("Hobilerim",style: TextStyle(color: Colors.white),),onPressed: (){
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ChangeNotifierProvider(
+                    create: (_)=>AuthService(),
+                    child: KullaniciHobileri(),
                   )));
                 })),
 

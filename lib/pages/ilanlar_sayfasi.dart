@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:petbuddy/pages/cevredekiler.dart';
 import 'package:petbuddy/pages/kullanici_ilanlari.dart';
 import 'package:petbuddy/pages/kullanici_profil_sayfasi.dart';
 import 'package:petbuddy/pages/mesaj_detay.dart';
 import 'package:petbuddy/pages/pet_ekle.dart';
 import 'package:petbuddy/pages/kullanici_petleri.dart';
+import 'package:petbuddy/pages/secilenKullaniciDetay.dart';
 import 'package:petbuddy/service/mesaj_service.dart';
 import 'package:petbuddy/service/petekle_service.dart';
 import 'package:petbuddy/service/auth_service.dart';
@@ -120,6 +122,21 @@ class _IlanlarState extends State<Ilanlar> {
 
 
             ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ChangeNotifierProvider(
+                  create: (_)=>AuthService(),
+                  child: Cevredekiler(),
+                )));
+              },
+              child: Text(
+                "Çevremdekiler",
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            ),
+
+            ElevatedButton(
               onPressed: () async {
                 await context.read<AuthService>().signOut();
                 Navigator.of(context).push(MaterialPageRoute(
@@ -133,6 +150,10 @@ class _IlanlarState extends State<Ilanlar> {
                   color: Colors.white,
                 ),),
             ),
+
+
+
+
           ],
         ),
       ),
@@ -216,9 +237,8 @@ class _IlanlarState extends State<Ilanlar> {
                                       Expanded(
                                         child: ElevatedButton(
                                           onPressed: () {
-                                            _mesajEkleService.MesajEkle(kullanici_idsi,listedeDokumanSnapshot[index].get("user_id"),"Ahmet","Mehmet"
-                                               );
-                                          //  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>MesajDetay(col: listedenDokumanSnapshot[index].get("doc_id"),kullanici_id: kullanici_idsi,)));
+                                           var x= _mesajEkleService.MesajEkle(kullanici_idsi,listedeDokumanSnapshot[index].get("user_id"),"Ahmet","Mehmet");
+                                          //Navigator.of(context).push(MaterialPageRoute(builder: (context)=>MesajDetay(col: x.,kullanici_id: kullanici_idsi,)));
 
 
 
@@ -243,7 +263,14 @@ class _IlanlarState extends State<Ilanlar> {
                                       ),
                                       Expanded(
                                         child: ElevatedButton(
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            Navigator.of(context).push(MaterialPageRoute(
+                                              builder: (context) => ChangeNotifierProvider(
+                                                  create: (_) => AuthService(),
+                                                  child: secilenProfilDetay(kullanici_id: listedeDokumanSnapshot[index].get("user_id"),)),
+                                            ));
+
+                                          },
                                           child: Text(
                                             "Profiline Git",
                                             style: TextStyle(

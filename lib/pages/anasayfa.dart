@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:petbuddy/pages/cevremdekiler.dart';
 import 'package:petbuddy/pages/giris_yap_sayfasi.dart';
 import 'package:petbuddy/pages/ilan_ekle.dart';
 import 'package:petbuddy/pages/ilanlar_sayfasi.dart';

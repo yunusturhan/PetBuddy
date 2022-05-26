@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:petbuddy/pages/kullanici_hobiler_sayfasi.dart';
+import 'package:petbuddy/pages/cevredekiler.dart';
+import 'package:petbuddy/pages/kullanici_hobiler.dart';
+import 'package:petbuddy/pages/kullanici_hobiler_sayfasi_eslesme.dart';
 import 'package:petbuddy/pages/kullanici_ilanlari.dart';
 import 'package:petbuddy/pages/pet_ekle.dart';
 import 'package:petbuddy/pages/kullanici_petleri.dart';
@@ -20,8 +22,10 @@ class KullaniciProfili extends StatefulWidget {
 }
 
 bool _dataDurumu = false;
+List dizi=[];
 
 class _KullaniciProfiliState extends State<KullaniciProfili> {
+
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final StorageService storage = StorageService();
   PetEkleService _petEkleService = PetEkleService();
@@ -29,6 +33,36 @@ class _KullaniciProfiliState extends State<KullaniciProfili> {
   @override
   Widget build(BuildContext context) {
     CollectionReference KullaniciRef = _firestore.collection("Kullanici");
+    dizi.clear();
+    print("giriş id ${context.watch<AuthService>().user!.uid}");
+    StreamBuilder<QuerySnapshot>(
+        stream: KullaniciRef.doc("${context.watch<AuthService>().user!.uid}").collection("Hobiler").orderBy("hobi_adi").snapshots(),
+        builder: (BuildContext context, AsyncSnapshot asyncSnapshot) {
+          try {
+            dizi.clear();
+            List<DocumentSnapshot> listedeDokumanSnapshot =asyncSnapshot.data.docs;
+
+
+            return !asyncSnapshot.hasData ? Center(child: CircularProgressIndicator())
+                : ListView.builder(
+                itemCount: listedeDokumanSnapshot.length,
+                itemBuilder: (context, index) {
+                  setState(() {
+                    dizi.add("${listedeDokumanSnapshot[index].get("hobi_adi")}");
+                    print("${listedeDokumanSnapshot[index].get("hobi_adi")}");
+                  });
+                  return SizedBox();
+
+
+                });
+          } catch (e) {
+            print("İnternetten veri gelene kadar beklenecek");
+            return Center(child: LinearProgressIndicator());
+          }
+        });
+
+
+
 
     return Scaffold(
       appBar: AppBar(
@@ -115,6 +149,10 @@ class _KullaniciProfiliState extends State<KullaniciProfili> {
       body: Center(
         child:Column(
           children: [
+
+
+
+
             Card(color: Colors.blueGrey.shade100,
               margin: EdgeInsets.all(5),shape:RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(0.0),
@@ -136,6 +174,8 @@ class _KullaniciProfiliState extends State<KullaniciProfili> {
                             itemBuilder: (context, index) {
                               if(listedeDokumanSnapshot.isNotEmpty)
                               {
+
+                                print(dizi);
                                 return Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -208,9 +248,64 @@ class _KullaniciProfiliState extends State<KullaniciProfili> {
                 child: ElevatedButton.icon(icon:Icon(Icons.sports_tennis_outlined,color: Colors.white,), label:Text("Hobilerim",style: TextStyle(color: Colors.white),),onPressed: (){
                   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ChangeNotifierProvider(
                     create: (_)=>AuthService(),
-                    child: KullaniciHobileri(),
+                    child:KullaniciHobileri(),
                   )));
                 })),
+
+
+
+            SizedBox(width: 250,
+                child: ElevatedButton.icon(icon:Icon(Icons.sports_tennis_outlined,color: Colors.white,), label:Text("Hobilerimine Göre Eşleş",style: TextStyle(color: Colors.white),textAlign: TextAlign.center),onPressed: (){
+                  print(dizi.length);
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ChangeNotifierProvider(
+                    create: (_)=>AuthService(),
+                    child: KullaniciHobileriEslesme(hobiDizisi:dizi),
+                  )));
+                })),
+            SizedBox(width: 250,
+                child: ElevatedButton.icon(icon:Icon(Icons.pin_drop_outlined,color: Colors.white,), label:Text("Çevremdekiler",style: TextStyle(color: Colors.white),),onPressed: (){
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ChangeNotifierProvider(
+                    create: (_)=>AuthService(),
+                    child:Cevredekiler(),
+                  )));
+                })),
+
+
+
+
+
+
+
+
+
+
+
+
+
+            StreamBuilder<QuerySnapshot>(
+                stream: KullaniciRef.doc("${context.watch<AuthService>().user!.uid}").collection("Hobiler").orderBy("hobi_adi").snapshots(),
+                builder: (BuildContext context, AsyncSnapshot asyncSnapshot) {
+                  try {
+                    List<DocumentSnapshot> listedeDokumanSnapshot =asyncSnapshot.data.docs;
+
+                    return !asyncSnapshot.hasData ? Center(child: CircularProgressIndicator())
+                        : Flexible(
+                      child: ListView.builder(
+                          itemCount: listedeDokumanSnapshot.length,
+                          itemBuilder: (context, index) {
+                            dizi.add(listedeDokumanSnapshot[index].get("hobi_adi"));
+
+                            return SizedBox();
+
+
+                          }),
+                    );
+                  } catch (e) {
+                    print("İnternetten veri gelene kadar beklenecek");
+                    return Center(child: LinearProgressIndicator());
+                  }
+                }),
+
 
           ],
         )),

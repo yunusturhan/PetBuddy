@@ -4,6 +4,7 @@ import 'package:petbuddy/pages/secilenKullaniciDetay.dart';
 import 'package:provider/src/provider.dart';
 import '../service/auth_service.dart';
 import '../service/mesaj_service.dart';
+import 'package:provider/provider.dart';
 
 class Cevredekiler extends StatefulWidget {
   const Cevredekiler({Key? key}) : super(key: key);
@@ -119,7 +120,10 @@ class _CevredekilerState extends State<Cevredekiler> {
                                 Expanded(
                                   child: ElevatedButton(
                                     onPressed: () {
-                                      Navigator.of(context).push(MaterialPageRoute(builder: (context)=>secilenProfilDetay(kullanici_id: listedenOkunanSnapshot[index].get("user_id"),)
+                                      Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) => ChangeNotifierProvider(
+                                            create: (_) => AuthService(),
+                                            child: secilenProfilDetay(kullanici_id: listedenOkunanSnapshot[index].get("user_id"),)),
                                       ));
                                     },
                                     child: Text(

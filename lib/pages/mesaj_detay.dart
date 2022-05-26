@@ -59,7 +59,7 @@ class _MesajDetayState extends State<MesajDetay> {
                           itemBuilder: (context, index) {
                             if(listedeDokumanSnapshot.length>0) {
                               if (listedeDokumanSnapshot[index].get(
-                                  "gonderen") == super.widget.kullanici_id)
+                                  "gonderen") == super.widget.kullanici_id) {
                                 return Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -104,7 +104,7 @@ class _MesajDetayState extends State<MesajDetay> {
                                     ),
                                   ],
                                 );
-                              else
+                              } else {
                                 return Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -149,6 +149,7 @@ class _MesajDetayState extends State<MesajDetay> {
                                     ),
                                   ],
                                 );
+                              }
                             }
                             else return Center(child: Text("Sohbetin başındasınız haydi bir selam ver"),);
 
